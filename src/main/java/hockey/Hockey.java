@@ -1,12 +1,14 @@
 package hockey;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Hockey extends Application {
-    static final double meter = 15;
+    static final double meter = 20;
 
     public static void main(String[] args) {
         launch(args);
@@ -17,17 +19,22 @@ public class Hockey extends Application {
         primaryStage.setTitle("Hockey!");
         BorderPane root = new BorderPane();
         Rink rink = new Rink();
+
         addPlayersToRink(rink);
         root.setCenter(rink);
-        primaryStage.setScene(new Scene(root, 100 * meter, 50 * meter));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
     private void addPlayersToRink(Rink rink) {
-        HockeyPlayer hockeyPlayer = new HockeyPlayer();
+        final HockeyPlayer hockeyPlayer = new HockeyPlayer(4 * meter, 15 * meter);
         rink.getChildren().add(hockeyPlayer);
-        hockeyPlayer.skateTo(Rink.rinkLength / 2.2, Rink.rinkWidth / 2);
-
+        rink.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                hockeyPlayer.skateTo(mouseEvent.getX(), mouseEvent.getY());
+            }
+        });
     }
 
 }
