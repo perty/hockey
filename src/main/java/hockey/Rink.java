@@ -13,7 +13,7 @@ import javafx.scene.shape.*;
  * Time: 19:31
  */
 public class Rink extends Group {
-    static final double meter = 15;
+    static final double meter = Hockey.meter;
     static final double rinkLength = 60 * meter;
     static final double rinkWidth = 30 * meter;
     static final double goalCreaseRadius = 1.8 * meter;
