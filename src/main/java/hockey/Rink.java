@@ -1,10 +1,12 @@
 package hockey;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.GroupBuilder;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import util.ArithmeticPoint;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +17,10 @@ import javafx.scene.shape.*;
 public class Rink extends Group {
     static final double meter = Hockey.meter;
     static final double rinkLength = 60 * meter;
+    static final double CENTER_SPOT_X = rinkLength / 2;
     static final double rinkWidth = 30 * meter;
+    static final double CENTER_SPOT_Y = rinkWidth / 2;
+    static final ArithmeticPoint centerSpot = new ArithmeticPoint(CENTER_SPOT_X, CENTER_SPOT_Y);
     static final double goalCreaseRadius = 1.8 * meter;
     static final double circleStrokeWidth = 0.05 * meter;
     static final double goalLineWidth = circleStrokeWidth;
@@ -51,9 +56,9 @@ public class Rink extends Group {
                 .stroke(Color.BLUE)
                 .strokeWidth(circleStrokeWidth)
                 .build();
-        Circle centerSpot = CircleBuilder.create()
-                .centerX(rinkLength / 2)
-                .centerY(rinkWidth / 2)
+        Circle centerSpotMark = CircleBuilder.create()
+                .centerX(CENTER_SPOT_X)
+                .centerY(CENTER_SPOT_Y)
                 .radius(centerSpotRadius)
                 .fill(Color.BLUE)
                 .build();
@@ -79,7 +84,7 @@ public class Rink extends Group {
                 .children(
                         ice,
                         centerLine,
-                        centerSpot,
+                        centerSpotMark,
                         centerCircle,
                         westBlueLine,
                         eastBlueLine,
@@ -260,4 +265,19 @@ public class Rink extends Group {
                 .build();
     }
 
+    public ArithmeticPoint centerSpot() {
+        return centerSpot;
+    }
+
+    public double centerRadius() {
+        return centerCircleRadius;
+    }
+
+    public double eastGoalLine() {
+        return rinkLength - goalLineInset;
+    }
+
+    public double westGoalLine() {
+        return goalLineInset;
+    }
 }

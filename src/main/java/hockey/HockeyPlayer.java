@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
+import util.ArithmeticPoint;
 
 import java.awt.*;
 
@@ -20,11 +21,11 @@ public class HockeyPlayer extends Group {
     static final double meter = Hockey.meter;
     static final double depth = 0.3 * meter;
     static final double width = 1.0 * meter;
-    private double speed = 10 * meter;
+    static final double speed = 10 * meter;
 
-    public HockeyPlayer(Point2D startPoint) {
+    public HockeyPlayer(ArithmeticPoint startPoint, Color teamColor) {
         Ellipse body = EllipseBuilder.create()
-                .fill(Color.GREEN)
+                .fill(teamColor)
                 .radiusX(depth)
                 .radiusY(width)
                 .build();
@@ -44,7 +45,7 @@ public class HockeyPlayer extends Group {
         this.setTranslateY(startPoint.getY());
     }
 
-    public void skateTo(Point2D goalPoint) {
+    public void skateTo(ArithmeticPoint goalPoint) {
         double x0 = getTranslateX();
         double y0 = getTranslateY();
         double x1 = goalPoint.getX();
