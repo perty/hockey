@@ -2,8 +2,12 @@ package hockey;
 
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransitionBuilder;
-import javafx.geometry.Point2D;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
@@ -22,27 +26,59 @@ public class HockeyPlayer extends Group {
     static final double depth = 0.3 * meter;
     static final double width = 1.0 * meter;
     static final double speed = 10 * meter;
+    private BooleanProperty selectedState = new SimpleBooleanProperty(false);
 
     public HockeyPlayer(ArithmeticPoint startPoint, Color teamColor) {
-        Ellipse body = EllipseBuilder.create()
-                .fill(teamColor)
-                .radiusX(depth)
-                .radiusY(width)
+        getChildren().add(createBody(teamColor));
+        getChildren().add(createNose());
+        getChildren().add(createHelmet());
+        getChildren().add(createSelectionCircle());
+        this.setTranslateX(startPoint.getX());
+        this.setTranslateY(startPoint.getY());
+        setOnMouseClicked(beSelected());
+    }
+
+    private Node createSelectionCircle() {
+        Circle circle = CircleBuilder.create()
+                .radius(width * 1.2)
+                .fill(Color.TRANSPARENT)
+                .stroke(Color.YELLOWGREEN)
                 .build();
-        getChildren().add(body);
-        Circle nose = CircleBuilder.create()
+        circle.visibleProperty().bind(selectedState);
+        return circle;
+
+    }
+
+    private EventHandler<? super MouseEvent> beSelected() {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                Hockey.select(HockeyPlayer.this);
+            }
+        };
+    }
+
+    private Circle createHelmet() {
+        return CircleBuilder.create()
+                .fill(Color.WHITESMOKE)
+                .radius(depth)
+                .build();
+    }
+
+    private Circle createNose() {
+        return CircleBuilder.create()
                 .fill(Color.BROWN)
                 .radius(depth * 0.5)
                 .centerX(depth)
                 .build();
-        getChildren().add(nose);
-        Circle helmet = CircleBuilder.create()
-                .fill(Color.WHITESMOKE)
-                .radius(depth)
+    }
+
+    private Ellipse createBody(Color teamColor) {
+        return EllipseBuilder.create()
+                .fill(teamColor)
+                .radiusX(depth)
+                .radiusY(width)
                 .build();
-        getChildren().add(helmet);
-        this.setTranslateX(startPoint.getX());
-        this.setTranslateY(startPoint.getY());
     }
 
     public void skateTo(ArithmeticPoint goalPoint) {
@@ -78,4 +114,7 @@ public class HockeyPlayer extends Group {
         return Duration.seconds(time);
     }
 
+    public void setSelected(boolean selected) {
+        this.selectedState.setValue(selected);
+    }
 }

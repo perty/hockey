@@ -4,10 +4,14 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.GroupBuilder;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 import util.ArithmeticPoint;
 
@@ -15,6 +19,7 @@ public class Hockey extends Application {
     static final double meter = 20;
     private static final Color HOME_TEAM_COLOR = Color.GREEN;
     private static final Color AWAY_TEAM_COLOR = Color.BLUE;
+    private static HockeyPlayer selectedPlayer;
 
     public static void main(String[] args) {
         launch(args);
@@ -23,27 +28,36 @@ public class Hockey extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Hockey!");
-        BorderPane root = new BorderPane();
+        BorderPane borderPane = new BorderPane();
         Rink rink = new Rink();
 
         addPlayersToRink(rink);
-        root.setCenter(rink);
-        primaryStage.setScene(new Scene(root));
+
+        borderPane.setCenter(rink);
+        borderPane.setRight(controlPanel());
+        borderPane.setLeft(controlPanel());
+        primaryStage.setScene(new Scene(borderPane));
         primaryStage.show();
+    }
+
+    private Node controlPanel() {
+        return VBoxBuilder.create()
+                .children(
+                        new PlayerPanel(),
+                        new PlayerPanel(),
+                        new PlayerPanel(),
+                        new PlayerPanel(),
+                        new PlayerPanel(),
+                        new PlayerPanel()
+                )
+                .spacing(0.1 * meter)
+                .build();
     }
 
     private void addPlayersToRink(Rink rink) {
         double centerLine = 0.9 * meter;
-        Group awayTeam = createTeam(AWAY_TEAM_COLOR, centerLine, centerLine + 5 * meter, Rink.eastGoalLine());
-        rink.getChildren().add(awayTeam);
+        rink.getChildren().add(createTeam(AWAY_TEAM_COLOR, centerLine, centerLine + 5 * meter, Rink.eastGoalLine()));
         rink.getChildren().add(createTeam(HOME_TEAM_COLOR, -centerLine, -centerLine - 5 * meter, Rink.westGoalLine()));
-        final HockeyPlayer hockeyPlayer = (HockeyPlayer) awayTeam.getChildren().get(0);
-        rink.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                hockeyPlayer.skateTo(new ArithmeticPoint(mouseEvent.getX(), mouseEvent.getY()));
-            }
-        });
     }
 
     private Group createTeam(Color teamColor, double centerLine, double defenceLine, double goalLine) {
@@ -77,4 +91,11 @@ public class Hockey extends Application {
         return Rink.centerSpot().add(new ArithmeticPoint(deltaX, deltaY));
     }
 
+    public static void select(HockeyPlayer player) {
+        if(selectedPlayer != null) {
+            selectedPlayer.setSelected(false);
+        }
+        selectedPlayer = player;
+        player.setSelected(true);
+    }
 }

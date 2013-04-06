@@ -1,6 +1,5 @@
 package hockey;
 
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.GroupBuilder;
 import javafx.scene.Node;
