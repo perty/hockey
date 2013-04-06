@@ -23,14 +23,14 @@ public class HockeyPlayer extends Group {
     public HockeyPlayer(double startX, double startY) {
         Ellipse body = EllipseBuilder.create()
                 .fill(Color.GREEN)
-                .radiusX(width)
-                .radiusY(depth)
+                .radiusX(depth)
+                .radiusY(width)
                 .build();
         getChildren().add(body);
         Circle nose = CircleBuilder.create()
                 .fill(Color.BROWN)
                 .radius(depth * 0.5)
-                .centerY(depth)
+                .centerX(depth)
                 .build();
         getChildren().add(nose);
         Circle helmet = CircleBuilder.create()
