@@ -265,19 +265,19 @@ public class Rink extends Group {
                 .build();
     }
 
-    public ArithmeticPoint centerSpot() {
+    public static ArithmeticPoint centerSpot() {
         return centerSpot;
     }
 
-    public double centerRadius() {
+    public static double centerRadius() {
         return centerCircleRadius;
     }
 
-    public double eastGoalLine() {
+    public static double eastGoalLine() {
         return rinkLength - goalLineInset;
     }
 
-    public double westGoalLine() {
+    public static double westGoalLine() {
         return goalLineInset;
     }
 }

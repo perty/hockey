@@ -33,10 +33,10 @@ public class Hockey extends Application {
     }
 
     private void addPlayersToRink(Rink rink) {
-        Group awayTeam = createAwayTeam(rink);
+        double centerLine = 0.9 * meter;
+        Group awayTeam = createTeam(AWAY_TEAM_COLOR, centerLine, centerLine + 5 * meter, Rink.eastGoalLine());
         rink.getChildren().add(awayTeam);
-        Group homeTeam = createHomeTeam(rink);
-        rink.getChildren().add(homeTeam);
+        rink.getChildren().add(createTeam(HOME_TEAM_COLOR, -centerLine, -centerLine - 5 * meter, Rink.westGoalLine()));
         final HockeyPlayer hockeyPlayer = (HockeyPlayer) awayTeam.getChildren().get(0);
         rink.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -46,15 +46,14 @@ public class Hockey extends Application {
         });
     }
 
-    private Group createHomeTeam(Rink rink) {
-        double deltaX = -0.5 * meter;
-        HockeyPlayer center = new HockeyPlayer(relativeToCenterSpot(rink, deltaX, 0), HOME_TEAM_COLOR);
-        HockeyPlayer leftForward = new HockeyPlayer(relativeToCenterSpot(rink, deltaX, rink.centerRadius()), HOME_TEAM_COLOR);
-        HockeyPlayer rightForward = new HockeyPlayer(relativeToCenterSpot(rink, deltaX, -rink.centerRadius()), HOME_TEAM_COLOR);
-        double defenceDeltaX = deltaX - 5 * meter;
-        HockeyPlayer leftDefence = new HockeyPlayer(relativeToCenterSpot(rink, defenceDeltaX, rink.centerRadius()), HOME_TEAM_COLOR);
-        HockeyPlayer rightDefence = new HockeyPlayer(relativeToCenterSpot(rink, defenceDeltaX, -rink.centerRadius()), HOME_TEAM_COLOR);
-        HockeyPlayer goalie = new HockeyPlayer(new ArithmeticPoint(rink.westGoalLine(), Rink.rinkWidth / 2), HOME_TEAM_COLOR);
+    private Group createTeam(Color teamColor, double centerLine, double defenceLine, double goalLine) {
+        ArithmeticPoint startPoint = relativeToCenterSpot(centerLine, 0);
+        HockeyPlayer center = playerFacingCenterSpot(startPoint, teamColor);
+        HockeyPlayer leftForward = playerFacingCenterSpot(relativeToCenterSpot(centerLine, Rink.centerRadius()), teamColor);
+        HockeyPlayer rightForward = playerFacingCenterSpot(relativeToCenterSpot(centerLine, -Rink.centerRadius()), teamColor);
+        HockeyPlayer leftDefence = playerFacingCenterSpot(relativeToCenterSpot(defenceLine, Rink.centerRadius()), teamColor);
+        HockeyPlayer rightDefence = playerFacingCenterSpot(relativeToCenterSpot(defenceLine, -Rink.centerRadius()), teamColor);
+        HockeyPlayer goalie = playerFacingCenterSpot(new ArithmeticPoint(goalLine, Rink.rinkWidth / 2), teamColor);
 
         return GroupBuilder.create()
                 .children(
@@ -68,30 +67,14 @@ public class Hockey extends Application {
                 .build();
     }
 
-    private Group createAwayTeam(Rink rink) {
-        double deltaX = 0.5 * meter;
-        HockeyPlayer center = new HockeyPlayer(relativeToCenterSpot(rink, deltaX, 0), AWAY_TEAM_COLOR);
-        HockeyPlayer leftForward = new HockeyPlayer(relativeToCenterSpot(rink, deltaX, rink.centerRadius()), AWAY_TEAM_COLOR);
-        HockeyPlayer rightForward = new HockeyPlayer(relativeToCenterSpot(rink, deltaX, -rink.centerRadius()), AWAY_TEAM_COLOR);
-        double defenceDeltaX = deltaX + 5 * meter;
-        HockeyPlayer leftDefence = new HockeyPlayer(relativeToCenterSpot(rink, defenceDeltaX, rink.centerRadius()), AWAY_TEAM_COLOR);
-        HockeyPlayer rightDefence = new HockeyPlayer(relativeToCenterSpot(rink, defenceDeltaX, -rink.centerRadius()), AWAY_TEAM_COLOR);
-        HockeyPlayer goalie = new HockeyPlayer(new ArithmeticPoint(rink.eastGoalLine(), rink.rinkWidth / 2), AWAY_TEAM_COLOR);
-
-        return GroupBuilder.create()
-                .children(
-                        center,
-                        leftForward,
-                        rightForward,
-                        leftDefence,
-                        rightDefence,
-                        goalie
-                )
-                .build();
+    private HockeyPlayer playerFacingCenterSpot(ArithmeticPoint startPoint, Color teamColor) {
+        HockeyPlayer center = new HockeyPlayer(startPoint, teamColor);
+        center.faceTowardsPoint(Rink.centerSpot);
+        return center;
     }
 
-    private ArithmeticPoint relativeToCenterSpot(Rink rink, double deltaX, double deltaY) {
-        return rink.centerSpot().add(new ArithmeticPoint(deltaX, deltaY));
+    private ArithmeticPoint relativeToCenterSpot(double deltaX, double deltaY) {
+        return Rink.centerSpot().add(new ArithmeticPoint(deltaX, deltaY));
     }
 
 }

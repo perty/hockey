@@ -67,8 +67,14 @@ public class HockeyPlayer extends Group {
         pathTransition.play();
     }
 
+    public void faceTowardsPoint(ArithmeticPoint focusPoint) {
+        double x0 = getTranslateX();
+        double y0 = getTranslateY();
+        this.setRotate(new ArithmeticPoint(x0, y0).angleTo(focusPoint));
+    }
+
     private Duration durationFromSpeedAndDistance(double distance) {
-        double time = distance / this.speed;
+        double time = distance / speed;
         return Duration.seconds(time);
     }
 
