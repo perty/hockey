@@ -2,6 +2,7 @@ package hockey;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -27,12 +28,12 @@ public class Hockey extends Application {
     }
 
     private void addPlayersToRink(Rink rink) {
-        final HockeyPlayer hockeyPlayer = new HockeyPlayer(4 * meter, 15 * meter);
+        final HockeyPlayer hockeyPlayer = new HockeyPlayer(new Point2D(4 * meter, 15 * meter));
         rink.getChildren().add(hockeyPlayer);
         rink.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                hockeyPlayer.skateTo(mouseEvent.getX(), mouseEvent.getY());
+                hockeyPlayer.skateTo(new Point2D(mouseEvent.getX(), mouseEvent.getY()));
             }
         });
     }

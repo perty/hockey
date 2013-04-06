@@ -2,6 +2,7 @@ package hockey;
 
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransitionBuilder;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -21,7 +22,7 @@ public class HockeyPlayer extends Group {
     static final double width = 1.0 * meter;
     private double speed = 10 * meter;
 
-    public HockeyPlayer(double startX, double startY) {
+    public HockeyPlayer(Point2D startPoint) {
         Ellipse body = EllipseBuilder.create()
                 .fill(Color.GREEN)
                 .radiusX(depth)
@@ -39,13 +40,15 @@ public class HockeyPlayer extends Group {
                 .radius(depth)
                 .build();
         getChildren().add(helmet);
-        this.setTranslateX(startX);
-        this.setTranslateY(startY);
+        this.setTranslateX(startPoint.getX());
+        this.setTranslateY(startPoint.getY());
     }
 
-    public void skateTo(double x1, double y1) {
+    public void skateTo(Point2D goalPoint) {
         double x0 = getTranslateX();
         double y0 = getTranslateY();
+        double x1 = goalPoint.getX();
+        double y1 = goalPoint.getY();
         Path path = PathBuilder.create()
                 .elements(
                         new MoveTo(x0, y0),
