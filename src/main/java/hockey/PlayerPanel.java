@@ -1,5 +1,7 @@
 package hockey;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.RectangleBuilder;
@@ -24,6 +26,15 @@ public class PlayerPanel extends HBox {
                         .fill(Color.TRANSPARENT)
                         .build()
         );
+        setOnMouseClicked(selectNone());
+    }
 
+    private EventHandler<? super MouseEvent> selectNone() {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                Hockey.select(null);
+            }
+        };
     }
 }
