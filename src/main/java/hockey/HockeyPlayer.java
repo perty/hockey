@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
+import java.awt.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: perty
@@ -17,6 +19,7 @@ public class HockeyPlayer extends Group {
     static final double meter = Hockey.meter;
     static final double depth = 0.3 * meter;
     static final double width = 1.0 * meter;
+    private double speed = 10 * meter;
 
     public HockeyPlayer(double startX, double startY) {
         Ellipse body = EllipseBuilder.create()
@@ -40,17 +43,29 @@ public class HockeyPlayer extends Group {
         this.setTranslateY(startY);
     }
 
-    public void skateTo(double x, double y) {
+    public void skateTo(double x1, double y1) {
+        double x0 = getTranslateX();
+        double y0 = getTranslateY();
         Path path = PathBuilder.create()
-                .elements(new MoveTo(getTranslateX(), getTranslateY()), new LineTo(x, y))
+                .elements(
+                        new MoveTo(x0, y0),
+                        new LineTo(x1, y1)
+                )
                 .build();
+
+        Duration duration = durationFromSpeedAndDistance(Point.distance(x0, y0, x1, y1));
         PathTransition pathTransition = PathTransitionBuilder.create()
                 .path(path)
                 .node(this)
                 .orientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT)
-                .duration(Duration.millis(10000))
+                .duration(duration)
                 .build();
         pathTransition.play();
+    }
+
+    private Duration durationFromSpeedAndDistance(double distance) {
+        double time = distance / this.speed;
+        return Duration.seconds(time);
     }
 
 }
