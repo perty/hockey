@@ -2,8 +2,6 @@ package hockey;
 
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransitionBuilder;
-import javafx.animation.TranslateTransition;
-import javafx.animation.TranslateTransitionBuilder;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -44,7 +42,7 @@ public class HockeyPlayer extends Group {
 
     public void skateTo(double x, double y) {
         Path path = PathBuilder.create()
-                .elements(new MoveTo(getTranslateX(),getTranslateY()), new LineTo(x,y))
+                .elements(new MoveTo(getTranslateX(), getTranslateY()), new LineTo(x, y))
                 .build();
         PathTransition pathTransition = PathTransitionBuilder.create()
                 .path(path)
@@ -53,21 +51,6 @@ public class HockeyPlayer extends Group {
                 .duration(Duration.millis(10000))
                 .build();
         pathTransition.play();
-        /*double angle = angleToGoal(x, y);
-        this.setRotate(angle);
-        TranslateTransition transition = TranslateTransitionBuilder.create()
-                .node(this)
-                .toX(x)
-                .toY(y)
-                .duration(Duration.millis(10000))
-                .build();
-        transition.play();*/
     }
 
-    private double angleToGoal(double x, double y) {
-        double x1 = getTranslateX();
-        double y1 = getTranslateY();
-
-        return (Math.atan2(y1, x1) - Math.atan2(y, x)) * 180 / Math.PI;
-    }
 }
