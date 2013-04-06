@@ -4,6 +4,7 @@ import javafx.animation.PathTransition;
 import javafx.animation.PathTransitionBuilder;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -27,6 +28,7 @@ public class HockeyPlayer extends Group {
     static final double width = 1.0 * meter;
     static final double speed = 10 * meter;
     private BooleanProperty selectedState = new SimpleBooleanProperty(false);
+    private PathTransition transition;
 
     public HockeyPlayer(ArithmeticPoint startPoint, Color teamColor) {
         getChildren().add(createBody(teamColor));
@@ -81,7 +83,7 @@ public class HockeyPlayer extends Group {
                 .build();
     }
 
-    public void skateTo(ArithmeticPoint goalPoint) {
+    public void queueSkateToCommand(ArithmeticPoint goalPoint) {
         double x0 = getTranslateX();
         double y0 = getTranslateY();
         double x1 = goalPoint.getX();
@@ -94,13 +96,28 @@ public class HockeyPlayer extends Group {
                 .build();
 
         Duration duration = durationFromSpeedAndDistance(Point.distance(x0, y0, x1, y1));
-        PathTransition pathTransition = PathTransitionBuilder.create()
+        transition = PathTransitionBuilder.create()
                 .path(path)
                 .node(this)
                 .orientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT)
                 .duration(duration)
+                .onFinished(finishedAction())
                 .build();
-        pathTransition.play();
+    }
+
+    private EventHandler<ActionEvent> finishedAction() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                transition = null;
+            }
+        };
+    }
+
+    public void act() {
+        if(transition != null) {
+            transition.play();
+        }
     }
 
     public void faceTowardsPoint(ArithmeticPoint focusPoint) {

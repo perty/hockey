@@ -1,14 +1,19 @@
 package hockey;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBuilder;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBoxBuilder;
 import javafx.stage.Stage;
 import util.ArithmeticPoint;
+
+import java.util.Collection;
 
 public class Hockey extends Application {
     static final double meter = 20;
@@ -30,10 +35,29 @@ public class Hockey extends Application {
         addPlayersToRink(rink);
 
         borderPane.setCenter(rink);
-        borderPane.setRight(controlPanel());
+        borderPane.setRight(
+                VBoxBuilder.create()
+                        .children(
+                                createActionButton()
+                        )
+                        .build());
         borderPane.setLeft(controlPanel());
         primaryStage.setScene(new Scene(borderPane));
         primaryStage.show();
+    }
+
+    private Button createActionButton() {
+        return ButtonBuilder.create()
+                .onAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        homeTeam.act();
+                        awayTeam.act();
+                    }
+                })
+                .text("Go!")
+                .build();
+
     }
 
     private EventHandler<? super MouseEvent> commandSelectedPlayer() {
@@ -41,7 +65,7 @@ public class Hockey extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (Hockey.selectedPlayer != null) {
-                    selectedPlayer.skateTo(new ArithmeticPoint(mouseEvent.getX(), mouseEvent.getY()));
+                    selectedPlayer.queueSkateToCommand(new ArithmeticPoint(mouseEvent.getX(), mouseEvent.getY()));
                 }
             }
         };
