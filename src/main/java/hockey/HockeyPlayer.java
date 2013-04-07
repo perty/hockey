@@ -113,6 +113,7 @@ public class HockeyPlayer extends Group {
     }
 
     public void act() {
+        setSelected(false);
         if (transition != null) {
             removeSkatePath();
             transition.play();
@@ -136,8 +137,14 @@ public class HockeyPlayer extends Group {
     }
 
     public void setSelected(boolean selected) {
-        removeSkatePath();
         this.selectedState.setValue(selected);
+        if (selected) {
+            resetSkatePath();
+        }
+    }
+
+    private void resetSkatePath() {
+        removeSkatePath();
         double x0 = getTranslateX();
         double y0 = getTranslateY();
         skatePath = PathBuilder.create()
