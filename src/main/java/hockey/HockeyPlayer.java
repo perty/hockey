@@ -56,6 +56,7 @@ public class HockeyPlayer extends Group {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 Hockey.select(HockeyPlayer.this);
+                mouseEvent.consume();
             }
         };
     }
