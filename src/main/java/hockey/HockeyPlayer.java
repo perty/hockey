@@ -6,6 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -116,9 +117,11 @@ public class HockeyPlayer extends Group {
         setSelected(false);
         if (transition != null) {
             removeSkatePath();
+            transition.setDuration(durationFromPathLength(skatePath));
             transition.play();
         }
     }
+
 
     private void removeSkatePath() {
         Group parent = (Group) getParent();
@@ -129,6 +132,20 @@ public class HockeyPlayer extends Group {
         double x0 = getTranslateX();
         double y0 = getTranslateY();
         this.setRotate(new ArithmeticPoint(x0, y0).angleTo(focusPoint));
+    }
+
+    private Duration durationFromPathLength(Path skatePath) {
+        Duration duration = Duration.millis(0);
+        Point2D reference = localToParent(0,0);
+        for(PathElement p : skatePath.getElements()) {
+            if(p instanceof LineTo) {
+                LineTo lineTo = (LineTo) p;
+                double distance = reference.distance(lineTo.getX(), lineTo.getY());
+                duration = duration.add(durationFromSpeedAndDistance(distance));
+                reference = new Point2D(lineTo.getX(), lineTo.getY());
+            }
+        }
+        return duration;
     }
 
     private Duration durationFromSpeedAndDistance(double distance) {
