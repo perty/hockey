@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -91,15 +90,9 @@ public class HockeyPlayer extends Group {
         double y0 = getTranslateY();
         double x1 = goalPoint.getX();
         double y1 = goalPoint.getY();
-        Group parent = (Group) getParent();
-        parent.getChildren().remove(skatePath);
-        skatePath = PathBuilder.create()
-                .elements(
-                        new MoveTo(x0, y0),
-                        new LineTo(x1, y1)
-                )
-                .build();
-        parent.getChildren().add(skatePath);
+
+        skatePath.getElements().add(new LineTo(x1, y1));
+
         Duration duration = durationFromSpeedAndDistance(Point.distance(x0, y0, x1, y1));
         transition = PathTransitionBuilder.create()
                 .path(skatePath)
@@ -120,11 +113,15 @@ public class HockeyPlayer extends Group {
     }
 
     public void act() {
-        if(transition != null) {
-            Group parent = (Group) getParent();
-            parent.getChildren().remove(skatePath);
+        if (transition != null) {
+            removeSkatePath();
             transition.play();
         }
+    }
+
+    private void removeSkatePath() {
+        Group parent = (Group) getParent();
+        parent.getChildren().remove(skatePath);
     }
 
     public void faceTowardsPoint(ArithmeticPoint focusPoint) {
@@ -139,6 +136,16 @@ public class HockeyPlayer extends Group {
     }
 
     public void setSelected(boolean selected) {
+        removeSkatePath();
         this.selectedState.setValue(selected);
+        double x0 = getTranslateX();
+        double y0 = getTranslateY();
+        skatePath = PathBuilder.create()
+                .elements(
+                        new MoveTo(x0, y0)
+                )
+                .build();
+        Group parent = (Group) getParent();
+        parent.getChildren().add(skatePath);
     }
 }
