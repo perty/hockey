@@ -1,5 +1,6 @@
 package hockey;
 
+import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransitionBuilder;
 import javafx.beans.property.BooleanProperty;
@@ -100,6 +101,7 @@ public class HockeyPlayer extends Group {
                 .node(this)
                 .orientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT)
                 .duration(duration)
+                .interpolator(Interpolator.EASE_IN)
                 .onFinished(finishedAction())
                 .build();
     }

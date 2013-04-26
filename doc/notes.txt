@@ -1,0 +1,23 @@
+Läget nu
+
+Spelarna flyttar sig enligt kommando när man trycker GO. Alla har en intentionslinje som visas.
+
+Det finnsn en server men ingen koppling dit.
+
+Frågor
+
+På vilken nivå ska man kommendera spelarna?
+
+Hur blir spelarna tränade individer med färdigheter?
+
+Om man kör någon slags pace, 15 s beslut, 15 s spel - vad händer med en spelare som inte hinner åka hela sin intention?
+Ska man låta den pausa och visa sin intention? Man behöver kunna ändra i så fall.
+
+Vad ska göras
+
+Koppla till server
+Bara kommendera egna spelare
+Införa en puck :)
+Skjuta, dribbla och passa
+Bågar i åkningen i st f skarpa vinklar
+Titta på pucken när spelaren stannar.
